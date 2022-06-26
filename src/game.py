@@ -3,11 +3,12 @@ from character.player import Player
 from pyray import Camera2D
 from config.fetch import loadConfig
 from elements.platform import Platform
+from elements.wall import Wall
 from gameio.dataio import *
 
 class Game:
     def __init__(self) -> None:
-        self.version = 'alpha 1.0 bringup 3'
+        self.version = 'alpha 1.0 bringup 4'
         self.palette = getPalette()
         self.config = loadConfig()
         self.width, self.height, self.fps, self.title = self.config['screen_width'], self.config['screen_height'], self.config['fps_clock'], bytes(self.config['title'], 'utf-8')
@@ -17,6 +18,7 @@ class Game:
         self.camera.rotation = 0.0
         self.camera.zoom = self.config['camera_zoom']
         self.platforms = getMap()
+        self.wall = Wall(1100, -200, 40, 1100, [0,0,0,255])
 
         InitWindow(self.width, self.height, self.title)
         SetTargetFPS(self.fps)
@@ -35,6 +37,7 @@ class Game:
 
 
     def update(self):
+        self.wall.collision(self.player)
         self.player.update()
         for platform in self.platforms:
             self.checkPlatformCollision(platform)
@@ -57,6 +60,7 @@ class Game:
             DrawText(b'by easontek2398 and meowscripty',20, self.height - 50, 15, self.palette('blue'))
         BeginMode2D(self.camera)
         self.player.draw()
+        self.wall.draw()
         
         for platform in self.platforms:
             platform.draw()
