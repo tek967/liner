@@ -5,6 +5,10 @@ from config.fetch import loadConfig
 from elements.platform import Platform
 from gameio.dataio import *
 
+"""
+Liner: a 2d platformer game written in raylib and python.
+"""
+
 class Game:
     def __init__(self) -> None:
         self.version = 'alpha 1.0 bringup 3'
