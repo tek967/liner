@@ -12,7 +12,7 @@ Liner: a 2d platformer game written in raylib and python.
 
 class Game:
     def __init__(self) -> None:
-        self.version = 'alpha 1.0 bringup 4'
+        self.version = 'alpha 1.0 bringup 5'
         self.palette = getPalette()
         self.config = loadConfig()
         self.width, self.height, self.fps, self.title = self.config['screen_width'], self.config['screen_height'], self.config['fps_clock'], bytes(self.config['title'], 'utf-8')
@@ -21,8 +21,7 @@ class Game:
         self.camera.offset = self.width/2, self.height/2
         self.camera.rotation = 0.0
         self.camera.zoom = self.config['camera_zoom']
-        self.platforms = getMap()
-        self.wall = Wall(1100, -200, 40, 1100, [0,0,0,255])
+        self.walls, self.platforms = getMap()
 
         InitWindow(self.width, self.height, self.title)
         SetTargetFPS(self.fps)
@@ -41,9 +40,11 @@ class Game:
 
 
     def update(self):
-        self.wall.collision(self.player)
+        for wall in self.walls:
+            wall.collision(self.player)
         self.player.update()
         for platform in self.platforms:
+            platform.wall.collision(self.player)
             self.checkPlatformCollision(platform)
         BeginDrawing()
         self.camera.target = self.player.rect.x + self.player.rect.width/2, self.player.rect.y + self.player.rect.height/2
@@ -64,7 +65,9 @@ class Game:
             DrawText(b'by easontek2398 and meowscripty',20, self.height - 50, 15, self.palette('blue'))
         BeginMode2D(self.camera)
         self.player.draw()
-        self.wall.draw()
+
+        for wall in self.walls:
+            wall.draw()
         
         for platform in self.platforms:
             platform.draw()
