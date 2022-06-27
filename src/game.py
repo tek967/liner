@@ -12,7 +12,7 @@ Liner: a 2d platformer game written in raylib and python.
 
 class Game:
     def __init__(self) -> None:
-        self.version = 'alpha 1.0 bringup 5'
+        self.version = 'alpha 1.0 bringup 6'
         self.palette = getPalette()
         self.config = loadConfig()
         self.width, self.height, self.fps, self.title = self.config['screen_width'], self.config['screen_height'], self.config['fps_clock'], bytes(self.config['title'], 'utf-8')
@@ -22,13 +22,12 @@ class Game:
         self.camera.rotation = 0.0
         self.camera.zoom = self.config['camera_zoom']
         self.walls, self.platforms = getMap()
-
+        
         InitWindow(self.width, self.height, self.title)
         SetTargetFPS(self.fps)
         while not WindowShouldClose(): self.update()
 
     def checkPlatformCollision(self, platform):
-        if self.player.velocity.y >= 0:
             if platform.collision(self.player.rect):
                 if self.player.rect.x < platform.rect.x + platform.rect.width and self.player.rect.x + self.player.rect.width > platform.rect.x:
                     self.player.floorHeight = platform.rect.y - self.player.rect.height
@@ -37,6 +36,9 @@ class Game:
                     if self.player.rect.x < p.rect.x + p.rect.width and self.player.rect.x + self.player.rect.width > p.rect.x:
                         if p.rect.y > self.player.rect.y:
                             self.player.floorHeight = p.rect.y - self.player.rect.height
+    
+    def checkCeilingCollision(self, ceiling):
+        pass # nothing for you yet!
 
 
     def update(self):
@@ -44,7 +46,6 @@ class Game:
             wall.collision(self.player)
         self.player.update()
         for platform in self.platforms:
-            platform.wall.collision(self.player)
             self.checkPlatformCollision(platform)
         BeginDrawing()
         self.camera.target = self.player.rect.x + self.player.rect.width/2, self.player.rect.y + self.player.rect.height/2

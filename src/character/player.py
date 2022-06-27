@@ -15,6 +15,7 @@ class Player:
         self.ticks = 0
         self.jumpTickTimer = 0
         self.stopIncrementingJumpTickTimer = False
+        self.ceilingHeight = -200
         self.floorHeight = 1000
 
     def draw(self):
@@ -29,6 +30,10 @@ class Player:
             self.velocity.x -= 0.3
         if IsKeyReleased(self.controlset['move_forward']) or IsKeyReleased(self.controlset['move_backward']):
             self.velocity.x = 0
+        if self.rect.y < self.ceilingHeight:
+            self.rect.y = self.ceilingHeight
+            self.jumpTickTimer = 4
+            self.velocity.y = not self.velocity.y
         
         if IsKeyDown(self.controlset['jump']):
             if self.frames % 6 == 0 and self.stopIncrementingJumpTickTimer is False:
