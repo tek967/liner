@@ -9,6 +9,8 @@ class Ceiling:
     def draw(self):
         DrawRectangleRec(self.rect, self.color)
 
-    def collision(self, player):
+    def isPlayerUnder(self, player) -> bool:
         if player.rect.x < self.rect.x + self.rect.width and player.rect.x + player.rect.width > self.rect.x and player.rect.y > self.rect.y + self.rect.height:
-            player.ceilingHeight = self.rect.y + self.rect.height
+            return True
+        else:
+            return False
