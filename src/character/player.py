@@ -9,18 +9,18 @@ class Player:
         self.color = getPalette()['lightblue']
         self.velocity = Vector2(0,0)
         self.controlset = loadConfig()['controls']
-
+        self.health = 30
         self.frames = 0
         self.fallSpeed = 30
         self.ticks = 0
         self.jumpTickTimer = 0
         self.stopIncrementingJumpTickTimer = False
-        self.ceilingHeight = -200
+        self.ceilingHeight = -300
         self.floorHeight = 1000
 
     def draw(self):
         DrawRectangleRec(self.rect, self.color)
-    
+        
     def controls(self):
         self.rect.x = round(self.rect.x, 1)
         self.rect.y = round(self.rect.y, 1)

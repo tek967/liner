@@ -2,12 +2,12 @@ from raylib import *
 from character.player import Player
 from pyray import Camera2D
 from config.fetch import loadConfig
-from elements.platform import Platform
+from elements import platform, ceiling
 from elements.wall import Wall
 from gameio.dataio import *
 
 """
-Liner: a 2d platformer game written in raylib and python.
+Liner: a 2d platformer game written in raylib and python. (meow)
 """
 
 class Game:
@@ -22,10 +22,13 @@ class Game:
         self.camera.rotation = 0.0
         self.camera.zoom = self.config['camera_zoom']
         self.walls, self.platforms = getMap()
+        self.ceilings = [platform.ceilingRect for platform in self.platforms]
+        self.ceilings.insert(0, ceiling.Ceiling(-210,-200,1000,10,[255,0,0,255]))
         
         InitWindow(self.width, self.height, self.title)
         SetTargetFPS(self.fps)
-        while not WindowShouldClose(): self.update()
+        while not WindowShouldClose(): 
+            self.update()
 
     def checkPlatformCollision(self, platform):
             if platform.collision(self.player.rect):
@@ -38,10 +41,17 @@ class Game:
                             self.player.floorHeight = p.rect.y - self.player.rect.height
     
     def checkCeilingCollision(self, ceiling):
-        pass # nothing for you yet!
+        if ceiling.isPlayerUnder(self.player):
+            self.player.ceilingHeight = ceiling.rect.y + ceiling.rect.height
+        else:
+            for c in self.ceilings:
+                if c.isPlayerUnder(self.player):
+                    self.player.ceilingHeight = c.rect.y + c.rect.height
 
 
     def update(self):
+        for ceiling in self.ceilings:
+            self.checkCeilingCollision(ceiling)
         for wall in self.walls:
             wall.collision(self.player)
         self.player.update()
@@ -60,6 +70,7 @@ class Game:
             DrawText(bytes(f'XY Velocity: {round(self.player.velocity.x,1)},{round(self.player.velocity.y,1)}','utf-8'), 20, 60, 15, self.palette['gray'])
             DrawText(bytes(f'Jump Tick Timer: {self.player.jumpTickTimer}, Stop Incrementing Jump Tick Timer: {self.player.stopIncrementingJumpTickTimer}', 'utf-8'), 20, 75, 15, self.palette['gray'])
             DrawText(bytes(f"Floor height: {self.player.floorHeight}", 'utf-8'), 20, 90, 15, self.palette['gray'])
+            DrawText(bytes(f"Health: {self.player.health}", 'utf-8'),20, 105, 15,self.palette['gray'])
         if self.config['show_meow_in_credits']:
             DrawText(b"by easontek2398 and meowscripty (meow~)",20,self.height - 50,15,self.palette["lightblue"])
         else:
@@ -69,12 +80,10 @@ class Game:
 
         for wall in self.walls:
             wall.draw()
+
+        for ceil in self.ceilings:
+            ceil.draw()
         
         for platform in self.platforms:
             platform.draw()
         EndMode2D()
-
-
-
-
-    

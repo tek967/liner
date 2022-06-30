@@ -1,8 +1,8 @@
 # config main section
 debug_enable = true
 show_meow_in_credits = true
-screen_width = 1600
-screen_height = 900
+screen_width = 1024
+screen_height = 576
 title = "wow liner"
 fps_clock = 60
 show_ticks = true
