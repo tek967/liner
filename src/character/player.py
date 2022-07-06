@@ -2,7 +2,7 @@ from raylib import *
 from pyray import Rectangle, Vector2
 from config.fetch import loadConfig
 from gameio.dataio import getPalette
-
+from game import *
 class Player:
     def __init__(self):
         self.rect = Rectangle(-20,60,50,100)
@@ -57,7 +57,8 @@ class Player:
 
     def update(self):
         self.frames += 1
-        if self.frames % 6 == 0:
+        self.terc=Game.__init__().self.fps/10
+        if self.frames % self.terc == 0:
             self.ticks += 1
         if self.rect.y < self.floorHeight:
             self.velocity.y += 1

@@ -12,7 +12,7 @@ Liner: a 2d platformer game written in raylib and python. (meow)
 
 class Game:
     def __init__(self) -> None:
-        self.version = 'alpha 1.0 bringup 6'
+        self.version = 'alpha 1.0 bringup 7'
         self.palette = getPalette()
         self.config = loadConfig()
         self.width, self.height, self.fps, self.title = self.config['screen_width'], self.config['screen_height'], self.config['fps_clock'], bytes(self.config['title'], 'utf-8')
