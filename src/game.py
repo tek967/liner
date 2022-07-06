@@ -54,7 +54,7 @@ class Game:
             self.checkCeilingCollision(ceiling)
         for wall in self.walls:
             wall.collision(self.player)
-        self.player.update()
+        self.player.update(self.fps)
         for platform in self.platforms:
             self.checkPlatformCollision(platform)
         BeginDrawing()
@@ -71,6 +71,7 @@ class Game:
             DrawText(bytes(f'Jump Tick Timer: {self.player.jumpTickTimer}, Stop Incrementing Jump Tick Timer: {self.player.stopIncrementingJumpTickTimer}', 'utf-8'), 20, 75, 15, self.palette['gray'])
             DrawText(bytes(f"Floor height: {self.player.floorHeight}", 'utf-8'), 20, 90, 15, self.palette['gray'])
             DrawText(bytes(f"Health: {self.player.health}", 'utf-8'),20, 105, 15,self.palette['gray'])
+            DrawText(bytes(f"Ticks: {self.player.ticks}", 'utf-8'),20,120,15,self.palette['gray'])
         if self.config['show_meow_in_credits']:
             DrawText(b"by easontek2398 and meowscripty (meow~)",20,self.height - 50,15,self.palette["lightblue"])
         else:
@@ -83,7 +84,8 @@ class Game:
 
         for ceil in self.ceilings:
             ceil.draw()
-        
+
         for platform in self.platforms:
             platform.draw()
+
         EndMode2D()

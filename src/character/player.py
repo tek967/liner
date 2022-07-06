@@ -52,13 +52,11 @@ class Player:
         self.rect.x += self.velocity.x 
         self.rect.y += self.velocity.y
 
-        
-
-
-    def update(self):
+    def update(self, fps):
         self.frames += 1
-        if self.frames % 6 == 0:
+        if self.frames % (fps/10) == 0:
             self.ticks += 1
+
         if self.rect.y < self.floorHeight:
             self.velocity.y += 1
         elif self.rect.y > self.floorHeight:
