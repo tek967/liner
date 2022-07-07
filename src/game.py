@@ -23,8 +23,8 @@ class Game:
         self.camera.zoom = self.config['camera_zoom']
         self.walls, self.platforms = getMap()
         self.ceilings = [platform.ceilingRect for platform in self.platforms]
-        self.ceilings.insert(0, ceiling.Ceiling(-210,-200,1000,10,[255,0,0,255]))
-        
+        self.ceilings.insert(0, ceiling.Ceiling(-200,-300,1400,10, [255,0,0,255]))
+        print(self.ceilings)
         InitWindow(self.width, self.height, self.title)
         SetTargetFPS(self.fps)
         while not WindowShouldClose(): 
@@ -40,21 +40,21 @@ class Game:
                         if p.rect.y > self.player.rect.y:
                             self.player.floorHeight = p.rect.y - self.player.rect.height
     
-    def checkCeilingCollision(self, ceiling):
-        if ceiling.isPlayerUnder(self.player):
-            self.player.ceilingHeight = ceiling.rect.y + ceiling.rect.height
-        else:
-            for c in self.ceilings:
-                if c.isPlayerUnder(self.player):
-                    self.player.ceilingHeight = c.rect.y + c.rect.height
+    def checkCeilingCollision(self):
+        for ceiling in self.ceilings:
+            if ceiling.isPlayerUnder(self.player):
+                self.player.ceilingHeight = ceiling.rect.y + ceiling.rect.height
+            else:
+                for c in self.ceilings:
+                    if c.isPlayerUnder(self.player):
+                        self.player.ceilingHeight = c.rect.y + c.rect.height
 
 
     def update(self):
-        for ceiling in self.ceilings:
-            self.checkCeilingCollision(ceiling)
+        self.player.update(self.fps)
+        self.checkCeilingCollision()
         for wall in self.walls:
             wall.collision(self.player)
-        self.player.update(self.fps)
         for platform in self.platforms:
             self.checkPlatformCollision(platform)
         BeginDrawing()
@@ -69,7 +69,7 @@ class Game:
             DrawText(bytes(f"XY: {round(self.player.rect.x,2)},{round(self.player.rect.y,2)}",'utf-8'), 20, 45, 15, self.palette['gray'])
             DrawText(bytes(f'XY Velocity: {round(self.player.velocity.x,1)},{round(self.player.velocity.y,1)}','utf-8'), 20, 60, 15, self.palette['gray'])
             DrawText(bytes(f'Jump Tick Timer: {self.player.jumpTickTimer}, Stop Incrementing Jump Tick Timer: {self.player.stopIncrementingJumpTickTimer}', 'utf-8'), 20, 75, 15, self.palette['gray'])
-            DrawText(bytes(f"Floor height: {self.player.floorHeight}", 'utf-8'), 20, 90, 15, self.palette['gray'])
+            DrawText(bytes(f"Floor height: {self.player.floorHeight}, Ceiling Height: {self.player.ceilingHeight}", 'utf-8'), 20, 90, 15, self.palette['gray'])
             DrawText(bytes(f"Health: {self.player.health}", 'utf-8'),20, 105, 15,self.palette['gray'])
             DrawText(bytes(f"Ticks: {self.player.ticks}", 'utf-8'),20,120,15,self.palette['gray'])
         if self.config['show_meow_in_credits']:

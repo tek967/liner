@@ -30,6 +30,7 @@ class Player:
             self.velocity.x -= 0.3
         if IsKeyReleased(self.controlset['move_forward']) or IsKeyReleased(self.controlset['move_backward']):
             self.velocity.x = 0
+
         if self.rect.y < self.ceilingHeight:
             self.rect.y = self.ceilingHeight
             self.jumpTickTimer = 4

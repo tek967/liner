@@ -6,14 +6,16 @@ from .ceiling import Ceiling
 class Platform:
     def __init__(self, posx: int, posy: int, width: int, height: int, color: list[int]):
         self.rect = Rectangle(posx,posy,width,height)
-        self.ceilingRect = Ceiling(posx, posy + height / 4, width, height/4, [200,200,200,255])
+        self.ceilingRect = Ceiling(posx, posy+(height/4*3), width, height/4, [200,200,200,255])
         self.color = color
     
     def draw(self):
         DrawRectangleRec(self.rect, self.color)
+        self.ceilingRect.draw()
 
     def collision(self, player) -> bool:
-        if CheckCollisionRecs(self.rect, player):
-            return True
+        if CheckCollisionRecs(self.rect, player): 
+            if not CheckCollisionRecs(self.ceilingRect.rect, player):
+                return True
         else:
             return False
